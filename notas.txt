@@ -1,0 +1,10 @@
+Conhecendo a estrutura de um projeto dart
+
+.dart_tool -> gera a os arquivos compilados do projeto.
+.idea -> são pastas geradas pelo o intellij
+android -> gera o código nativo android.
+build -> é gerado o código build do código compilado.
+ios -> gera o codigo nativo para ios.
+lib -> é onde fica o nosso source code. O main.dart é o main do nosso projeto.
+pubspec.lock -> gerencia as dependecia;
+pubspec.yml -> podemos adicionar configurações extras no projeto.
