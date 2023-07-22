@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
 
 main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  MyApp({super.key});
+// O flutter utiliza a mesma ideia do react para atualização de estado.
+// O ideia é que usemos sempre widgets sem estado mas devemos passar os valores no construtor
+class MyAppState extends State<MyApp> {
+  int selectedQuestions = 0;
 
-  var selectedQuestions = 1;
+  void answerQuestion() {
+    if (selectedQuestions == 2) {
+      setState(() {
+        selectedQuestions = 0;
+      });
+      return;
+    }
+    setState(() {
+      selectedQuestions++;
+    });
+    print(selectedQuestions);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +46,6 @@ class MyApp extends StatelessWidget {
       ]
     };
 
-    void answerQuestion() {
-      selectedQuestions++;
-      print('Pergunta respondida');
-      print(selectedQuestions);
-    }
-
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
@@ -61,7 +68,7 @@ class MyApp extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                       padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      child: Text(perguntas[0])),
+                      child: Text(perguntas[selectedQuestions])),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: TextButton(
@@ -113,5 +120,14 @@ class MyApp extends StatelessWidget {
                 ],
               ),
             )));
+  }
+} //Devemos adicionar uma classe state que será responsável por controllar o estado da nossa aplicação.
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return MyAppState();
   }
 }
