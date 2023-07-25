@@ -23,8 +23,8 @@ class Question extends StatelessWidget {
             child: Text(getText,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 20,
+                  color: Colors.black,
+                  fontSize: 18,
                 ))));
   }
 }

@@ -13,14 +13,35 @@ class _AppState extends State<App> {
     return _selectedQuestions;
   }
 
-  List<String> questions = [
-    'Qual é a sua linguagem favorita?',
-    'Qual é  o framework do momento?',
-    'Qual é a nível profissional?'
+  // O object também pode representar uma lista
+  final List<Map<String, Object>> questions = [
+    {
+      'text': 'Qual é a sua linguagem favorita?',
+      'resposta': ['PHP', 'Java', 'C#', "Javascript", 'GO', 'Ruby']
+    },
+    {
+      'text': 'Qual é a seu nível de senioridade?',
+      'resposta': ['Estagiário', 'Trainee', 'Junior', 'Pleno', 'Senior', 'God']
+    },
+    {
+      'text': 'Qual desses frameworks você já usou?',
+      'resposta': ['Laravel', 'Angular', 'Vue', 'Spring', 'Django', '.NET']
+    },
+    {
+      'text': 'Em quais dessas áreas você deseja se especializar?',
+      'resposta': [
+        'Front-end',
+        'Backend',
+        'Mobile',
+        'Fullstack',
+        'DevOps',
+        'Engenharia de Dados'
+      ]
+    }
   ];
 
   void _answer() {
-    if (_selectedQuestions == 2) {
+    if (_selectedQuestions == 3) {
       _selectedQuestions = 0;
       setState(() {
         _selectedQuestions;
@@ -30,6 +51,14 @@ class _AppState extends State<App> {
     setState(() {
       _selectedQuestions++;
     });
+  }
+
+  List<Widget> parsedMapQuestionsToListWidget(List<Map<String, Object>> data) {
+    List<String> dataQuestions =
+        data[_selectedQuestions]['resposta'] as List<String>;
+    return dataQuestions
+        .map((element) => Answer(text: element, onPress: _answer))
+        .toList();
   }
 
   @override
@@ -53,19 +82,13 @@ class _AppState extends State<App> {
               children: [
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Question(text: questions[getSelectedQuestion])],
+                  children: [
+                    Question(
+                        text: questions[_selectedQuestions]['text'].toString()),
+                    ...parsedMapQuestionsToListWidget(
+                        questions) // podemos passar o spread na lista de widget
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Answer('Resposta 1', _answer),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Answer('Resposta 2', _answer),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Answer('Resposta 3', _answer))
               ],
             )));
   }
