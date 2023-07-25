@@ -40,7 +40,8 @@ class _AppState extends State<App> {
     }
   ];
 
-  void _answer() {
+  void _answer(int value) {
+    print(value);
     if (_selectedQuestions == 3) {
       _selectedQuestions = 0;
       setState(() {
@@ -54,11 +55,14 @@ class _AppState extends State<App> {
   }
 
   List<Widget> parsedMapQuestionsToListWidget(List<Map<String, Object>> data) {
+    // fazemos a conversão dos widgets e jogamo na nossa árvore de elementos.
     List<String> dataQuestions =
         data[_selectedQuestions]['resposta'] as List<String>;
-    return dataQuestions
-        .map((element) => Answer(text: element, onPress: _answer))
-        .toList();
+    return dataQuestions.asMap().entries.map((entry) {
+      int index = entry.key;
+      String element = entry.value;
+      return Answer(text: element, onPress: () => _answer(index));
+    }).toList();
   }
 
   @override
