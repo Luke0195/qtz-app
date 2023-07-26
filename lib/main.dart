@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'components/question/question.dart';
+import 'package:qzt/components/questionary/questionary.dart';
 import 'components/answer/answer.dart';
 import 'components/result/result.dart';
 
@@ -53,6 +53,12 @@ class _AppState extends State<App> {
     });
   }
 
+  void _restart() {
+    setState(() {
+      _selectedQuestions = _questions.length + 1;
+    });
+  }
+
   List<Widget> parsedMapQuestionsToListWidget(List<Map<String, Object>> data) {
     // fazemos a conversão dos widgets e jogamo na nossa árvore de elementos.
     List<String> dataQuestions =
@@ -68,36 +74,25 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      appBar: AppBar(
-          toolbarHeight: 60,
-          title: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 8),
-                child: Text('Quiz Project'),
-              ),
-              Icon(Icons.question_answer)
-            ],
-          )),
-      body: hasSelectedQuestions
-          ? Column(
-              children: [
-                Column(
+            appBar: AppBar(
+                toolbarHeight: 60,
+                title: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Question(
-                        text:
-                            _questions[_selectedQuestions]['text'].toString()),
-                    ...parsedMapQuestionsToListWidget(
-                        _questions) // podemos passar o spread na lista de widget
+                    Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: Text('Quiz Project'),
+                    ),
+                    Icon(Icons.question_answer)
                   ],
-                ),
-              ],
-            )
-          : const Result(),
-    ));
+                )),
+            body: hasSelectedQuestions
+                ? Questionary(
+                    questionText:
+                        _questions[_selectedQuestions]['text'].toString(),
+                    result: parsedMapQuestionsToListWidget(_questions))
+                : Result(onPress: () => _restart())));
   }
 }
 
