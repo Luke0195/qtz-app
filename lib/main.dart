@@ -1,6 +1,9 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'components/question/question.dart';
 import 'components/answer/answer.dart';
+import 'components/result/result.dart';
 
 main() {
   runApp(const App());
@@ -13,8 +16,8 @@ class _AppState extends State<App> {
     return _selectedQuestions;
   }
 
-  // O object também pode representar uma lista
-  final List<Map<String, Object>> questions = [
+  // O object também pode representar uma lista, com const as coisas serão otimizadas.
+  final List<Map<String, Object>> _questions = const [
     {
       'text': 'Qual é a sua linguagem favorita?',
       'resposta': ['PHP', 'Java', 'C#', "Javascript", 'GO', 'Ruby']
@@ -40,15 +43,11 @@ class _AppState extends State<App> {
     }
   ];
 
-  void _answer(int value) {
-    print(value);
-    if (_selectedQuestions == 3) {
-      _selectedQuestions = 0;
-      setState(() {
-        _selectedQuestions;
-      });
-      return;
-    }
+  bool get hasSelectedQuestions {
+    return _selectedQuestions < _questions.length;
+  }
+
+  void _answer() {
     setState(() {
       _selectedQuestions++;
     });
@@ -58,43 +57,47 @@ class _AppState extends State<App> {
     // fazemos a conversão dos widgets e jogamo na nossa árvore de elementos.
     List<String> dataQuestions =
         data[_selectedQuestions]['resposta'] as List<String>;
-    return dataQuestions.asMap().entries.map((entry) {
-      int index = entry.key;
-      String element = entry.value;
-      return Answer(text: element, onPress: () => _answer(index));
-    }).toList();
+    return hasSelectedQuestions
+        ? dataQuestions.map((element) {
+            return Answer(text: element, onPress: () => _answer());
+          }).toList()
+        : [];
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-            appBar: AppBar(
-                toolbarHeight: 60,
-                title: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Text('Quiz Project'),
-                    ),
-                    Icon(Icons.question_answer)
-                  ],
-                )),
-            body: Column(
+      appBar: AppBar(
+          toolbarHeight: 60,
+          title: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 8),
+                child: Text('Quiz Project'),
+              ),
+              Icon(Icons.question_answer)
+            ],
+          )),
+      body: hasSelectedQuestions
+          ? Column(
               children: [
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Question(
-                        text: questions[_selectedQuestions]['text'].toString()),
+                        text:
+                            _questions[_selectedQuestions]['text'].toString()),
                     ...parsedMapQuestionsToListWidget(
-                        questions) // podemos passar o spread na lista de widget
+                        _questions) // podemos passar o spread na lista de widget
                   ],
                 ),
               ],
-            )));
+            )
+          : const Result(),
+    ));
   }
 }
 
