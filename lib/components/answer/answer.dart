@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 
 class Answer extends StatelessWidget {
   final String text;
-  final void Function() onPress;
+  final int value;
+  final void Function(int value) onPress;
 
-  const Answer({required this.text, required this.onPress, super.key});
+  const Answer(
+      {required this.text,
+      required this.value,
+      required this.onPress,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +18,7 @@ class Answer extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.only(top: 8),
             child: TextButton(
-              onPressed: () => onPress(),
+              onPressed: () => onPress(value),
               style: TextButton.styleFrom(
                   fixedSize: const Size(220, 52),
                   disabledBackgroundColor: Colors.grey,
